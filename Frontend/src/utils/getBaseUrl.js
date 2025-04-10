@@ -1,5 +1,5 @@
 const getBaseUrl = () => {
-    const url = 'http://localhost:4000'; // Replace with your actual base URL
+    const url = import.meta.env.VITE_SERVER_URL; // Replace with your actual base URL
     return url;
 }
 

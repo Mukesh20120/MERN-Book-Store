@@ -2,7 +2,8 @@ const express = require('express');
 const cors = require('cors');
 const keys = require('./src/config/keys');
 const connectDB = require('./src/db/connect');
-
+const path = require('path');
+const fs = require('fs');
 const app = express();
 
 app.use(cors({
@@ -16,9 +17,17 @@ app.use('/api/v1/orders', require('./src/orders/order.router'));
 app.use('/api/v1/auth', require('./src/users/user.router'));
 app.use('/api/v1/admin', require('./src/stats/adminStats'));
 
-app.get('/', (req,res)=>{
-    res.send('Hello from the backend!')
+app.use(express.static(path.join(__dirname,'../Frontend/dist')));
+app.get('/{*any}', (req, res) => {
+    const indexPath = path.join(__dirname, '../Frontend', 'dist', 'index.html');
+    if (fs.existsSync(indexPath)) {
+        res.sendFile(indexPath);
+    } else {
+        res.status(404).send('Frontend not built. index.html not found.');
+    }
 });
+
+
 
 (async()=>{
     try{
